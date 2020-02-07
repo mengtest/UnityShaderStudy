@@ -1,0 +1,28 @@
+# =============== #
+# Unity generated #
+# =============== #
+Temp/
+Library/
+Logs/
+ProjectSettings/ProjectVersion.txt
+
+# ===================================== #
+# Visual Studio / MonoDevelop generated #
+# ===================================== #
+ExportedObj/
+obj/
+*.svd
+*.userprefs
+/*.csproj
+/*.log
+*.pidb
+*.suo
+/*.sln
+*.user
+*.unityproj
+*.booproj
+.vs/*
+.vscode/
+/*.sublime-workspace
+/*.sublime-project
+/.vs
