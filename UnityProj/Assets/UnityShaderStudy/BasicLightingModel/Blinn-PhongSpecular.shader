@@ -2,8 +2,9 @@
 {
     Properties
     {
-        _MainTex ("Texture", 2D) = "white" {}
-		_Specular("Specualr",Color) = (1,1,1,1)
+		_Color("Color Tint", Color) = (1,1,1,1)
+        _MainTex("Texture", 2D) = "white" {}
+		_Specular("Specualr", Color) = (1,1,1,1)
 		_Gloss("Gloss", Range(8.0,256)) = 20
     }
     SubShader
@@ -40,6 +41,7 @@
 				float3 worldNormal : TEXCOORD3;
             };
 
+			fixed4 _Color;
             sampler2D _MainTex;
             float4 _MainTex_ST;
 			fixed4 _Specular;
@@ -58,13 +60,15 @@
 
             fixed4 frag (v2f i) : SV_Target
             {
-				fixed3 ambient = UNITY_LIGHTMODEL_AMBIENT.rgb;
+				fixed3 albedo = tex2D(_MainTex, i.uv).rgb * _Color.rgb;
+
+				fixed3 ambient = UNITY_LIGHTMODEL_AMBIENT.rgb * albedo;
 
 				fixed3 worldNormal = normalize(i.worldNormal);
 
 				fixed3 worldLightDir = normalize(UnityWorldSpaceLightDir(i.worldPos));
 
-				fixed3 diffuse = _LightColor0.rgb * tex2D(_MainTex, i.uv).rgb * saturate(dot(worldLightDir, worldNormal));
+				fixed3 diffuse = _LightColor0.rgb * albedo * saturate(dot(worldLightDir, worldNormal));
 
 				fixed3 viewDir = normalize(UnityWorldSpaceViewDir(i.worldPos));
 				fixed3 halfDir = normalize(viewDir + worldLightDir);
