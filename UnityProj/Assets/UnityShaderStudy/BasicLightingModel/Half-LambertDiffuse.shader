@@ -48,7 +48,7 @@
                 v2f o;
                 o.pos = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                UNITY_TRANSFER_FOG(o,o.vertex);
+                UNITY_TRANSFER_FOG(o,o.pos);
 				o.worldNormal = mul(v.normal, (float3x3)unity_WorldToObject);
 				o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
                 return o;
