@@ -1,20 +1,27 @@
-﻿Shader "Custom/Study/BasicLightingModel/PhongSpecular"
+﻿Shader "Custom/Study/Transparent/Alpha Blending ZWrite"
 {
     Properties
     {
 		_Color("Color Tint", Color) = (1,1,1,1)
         _MainTex("Main Tex", 2D) = "white" {}
-		_Specular("Specular", Color) = (1,1,1,1)
-		_Gloss("Gloss", Range(8.0, 256)) = 20
+		_AlphaScale("Alpha Scale", Range(0,1)) = 1
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
-        LOD 100
+        Tags { "Queue"="Transparent" "IgnoreProjector"="True" "RenderType"="Transparent" }
+
+		Pass
+		{
+			ZWrite On
+			ColorMask 0
+		}
 
         Pass
         {
 			Tags { "LightMode"="ForwardBase" }
+
+			ZWrite Off
+			Blend SrcAlpha OneMinusSrcAlpha
 
             CGPROGRAM
             #pragma vertex vert
@@ -37,15 +44,14 @@
                 float2 uv : TEXCOORD0;
                 UNITY_FOG_COORDS(1)
                 float4 pos : SV_POSITION;
-				float3 worldNormal : TEXCOORD2;
-				float3 worldPos : TEXCOORD3;
+				float3 worldPos : TEXCOORD2;
+				float3 worldNormal : TEXCOORD3;
             };
 
 			fixed4 _Color;
             sampler2D _MainTex;
             float4 _MainTex_ST;
-			fixed4 _Specular;
-			half _Gloss;
+			fixed _AlphaScale;
 
             v2f vert (appdata v)
             {
@@ -60,27 +66,23 @@
 
             fixed4 frag (v2f i) : SV_Target
             {
-				fixed3 albedo = tex2D(_MainTex, i.uv).rgb * _Color.rgb;
+                fixed4 texCol = tex2D(_MainTex, i.uv);
+
+				fixed3 albedo = texCol.rgb * _Color.rgb;
 
 				fixed3 ambient = UNITY_LIGHTMODEL_AMBIENT.rgb * albedo;
 
 				fixed3 worldNormal = normalize(i.worldNormal);
-
 				fixed3 worldLightDir = normalize(UnityWorldSpaceLightDir(i.worldPos));
+				fixed3 diffuse = _LightColor0.rgb * albedo * max(0, dot(worldNormal, worldLightDir));
 
-				fixed3 diffuse = _LightColor0 * albedo * saturate(dot(worldLightDir, worldNormal));
-
-				fixed3 viewDir = normalize(UnityWorldSpaceViewDir(i.worldPos));
-				fixed3 reflectDir = normalize(reflect(-worldLightDir, worldNormal));
-				fixed3 specular = _LightColor0 * _Specular.rgb * pow(saturate(dot(viewDir, reflectDir)), _Gloss);
-
-                fixed4 col = fixed4(ambient + diffuse + specular, 1.0);
-                
+                fixed4 col = fixed4(ambient + diffuse, texCol.a * _AlphaScale);
+                // apply fog
                 UNITY_APPLY_FOG(i.fogCoord, col);
                 return col;
             }
             ENDCG
         }
     }
-	Fallback "Specular"
+	FallBack "Transparent/VertexLit"
 }

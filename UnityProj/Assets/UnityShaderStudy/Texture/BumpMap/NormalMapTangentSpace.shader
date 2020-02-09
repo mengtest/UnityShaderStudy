@@ -3,7 +3,7 @@
     Properties
     {
 		_Color("Color Tint", Color) = (1,1,1,1)
-        _MainTex("Texture", 2D) = "white" {}
+        _MainTex("Main Tex", 2D) = "white" {}
 		_BumpMap("Normal Map", 2D) = "bump"{}
 		_BumpScale("Bump Scale", Float) = 1.0
 		_Specular("Specular", Color) = (1,1,1,1)

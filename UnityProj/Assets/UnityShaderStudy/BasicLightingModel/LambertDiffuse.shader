@@ -3,7 +3,7 @@
     Properties
     {
 		_Color("Color Tint", Color) = (1,1,1,1)
-        _MainTex("Texture", 2D) = "white" {}
+        _MainTex("Main Tex", 2D) = "white" {}
     }
     SubShader
     {
