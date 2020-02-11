@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Cubemap
+  m_Name: CubemapChurchMat
   m_Shader: {fileID: 4800000, guid: 909bbb444c3d6b74990483d947df4206, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -92,7 +92,7 @@ Material:
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _Rotation: 49.93
+    - _Rotation: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
